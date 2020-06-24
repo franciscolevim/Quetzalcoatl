@@ -1,4 +1,4 @@
-"""Utilidades para validar de distintas maneras un txto según sea necesario.
+"""Utilidades para validar de distintas maneras un texto según sea necesario.
 """
 
 def is_empty(value:str):
