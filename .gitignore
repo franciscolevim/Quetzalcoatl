@@ -1,1 +1,9 @@
+# Visual Studio
 .vscode
+
+# Python
+*.egg-info
+__pycache__
+
+# test
+test
