@@ -2,10 +2,10 @@ from setuptools import setup
 
 
 setup(
-    name = 'Qutzalcoatl',
+    name = 'Quetzalcoatl',
     version = '1.0',
     author = 'Francisco Leví',
     author_email = 'franciscolevim@gmail.com',
     url = 'https://github.com/franciscolevim/Quetzalcoatl',
-    packages = ['quetzalcoatl']
+    packages = ['quetzalcoatl', 'quetzalcoatl.utils']
 )
