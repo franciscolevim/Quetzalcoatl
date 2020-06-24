@@ -8,8 +8,16 @@ class Paths:
     def __init__(self):
         self.__QUETZALCOATL_HOME_ENV = 'QUETZALCOATL'
         self.__QUETZALCOATL_HOME_DIRECTORY = '.'
+        self.__RESOURCES_DIRECTORY = 'resources'
 
         self.home = None
+
+
+    @property
+    def RESOURCES_DIRECTORY(self):
+        """Nombre default del directorio donde se pueden encontrar recurso para el juego.
+        """
+        return self.__RESOURCES_DIRECTORY
 
 
     @property
