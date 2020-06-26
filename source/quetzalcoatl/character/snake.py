@@ -37,24 +37,37 @@ class Snake(BasicCharacter):
         self.body = []
 
 
-    def move(self, offset:Vector2):
+    def move(self, offset:float):
         """El movimiento de Quetzalcoatl debe parte de la dirección que el jugador le da, esta dirección partirá de la 
         cabeza y cada segmento delcuerpo deberá seguir este movimiento.
 
         Args:
-            offset (Vector2): diferencia de distancia que se da de un lado a otro.
+            offset (float): diferencia de distancia que se da de un lado a otro.
         """
         mov_x = self.position[0] 
         mov_y = self.position[1]
 
         if self.direction == key.LEFT:
-            mov_x += offset.x * self.speed.x * -1
+            mov_x += offset * self.speed.x * -1
         elif self.direction == key.RIGHT:
-            mov_x += offset.x * self.speed.x * 1
-        elif self.direction == key.UP:
-            mov_y += offset.y * self.speed.y * 1
+            mov_x += offset * self.speed.x * 1
+
+        elif self.direction == key.UP:            
+            # mov_y += self.height
+            mov_y += offset * self.speed.y * 1
+
         elif self.direction == key.DOWN:
-            mov_y += offset.y * self.speed.y * -1
+            # mov_y -= self.height
+            mov_y += offset * self.speed.y * -1
 
         self.position = Vector2(mov_x, mov_y)
+
+
+    def y_position(self, position:float):
+        self.position = self.position[0], position
+
+
+    def x_position(self, position:float):
+        self.position = position, self.position[1]
+
         

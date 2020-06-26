@@ -18,11 +18,11 @@ class BasicCharacter(Sprite):
         self.direction = BasicCharacter.__STOP
 
 
-    def move(self, offset:Vector2):
+    def move(self, offset:float):
         """Los personaje por lo general deben tener asociado un movimiento por el escenario.
 
         Args:
-            offset (Vector2): distancia que se moverá el personaje.
+            offset (float): distancia que se moverá el personaje.
         """
         pass
 
