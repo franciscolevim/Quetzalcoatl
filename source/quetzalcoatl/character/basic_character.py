@@ -8,10 +8,10 @@ class BasicCharacter(Sprite):
     __STOP = 0
 
     def __init__(self, image):
-        """Los personajes son estáticos.
+        """Los personajes se crean como objetos estáticos dentro del escenario.
 
         Args:
-            image (pyglet.image.AbstractImage or pyglet.image.Animation)): Imagen que condorma el sprite.
+            image (pyglet.image.AbstractImage or pyglet.image.Animation)): Imagen que conforma el sprite.
         """
         super().__init__(image)
         self.speed = Vector2(0.00, 0.00)
