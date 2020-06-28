@@ -15,6 +15,7 @@ class Resources:
     __SPRITES_DIRECTORY = 'sprites'
     __HEAD_SPRITE = 'head.png'
     __SEGMENT_SPRITE = 'segment.png'
+    __HEART_SPRITE = 'heart.gif'
 
 
     @staticmethod
@@ -67,3 +68,10 @@ class Resources:
             Texture: Segmento del cuerpo de Quetzalcoatl. 
         """
         return Resources.__loader.image(Resources.__SEGMENT_SPRITE)
+
+
+    @staticmethod
+    def get_heart_animation():
+        """Sprite animado que representa la comida de Qutzalcoatl: corazones.
+        """
+        return Resources.__loader.animation(Resources.__HEART_SPRITE)

@@ -2,16 +2,20 @@ from cocos.director import director
 from cocos.layer import Layer
 from cocos.euclid import Vector2
 
+import random
 from pyglet.window import key
 from collections import defaultdict
 
 from quetzalcoatl.character.snake import Snake
+from quetzalcoatl.character.heart import Heart
 
 
 class BasicLayer(Layer):
     """Capa principal del escenario, que desplegará la interacción visual del juego con el usuario.
     """
     is_event_handler = True
+    __exists_heart = False
+
 
     def __init__(self):
         super().__init__()        
@@ -24,7 +28,6 @@ class BasicLayer(Layer):
         self.add(self.snake)
 
         self.schedule(self.update)
-        # self.schedule_interval(self.update, 0.32)
 
 
     def on_key_press(self, symbol, _):
@@ -57,3 +60,12 @@ class BasicLayer(Layer):
             self.snake.y_position(self.top_limit)
         else:
             self.snake.move(offset)
+
+        if not BasicLayer.__exists_heart:
+            heart_pos_x = random.uniform(self.left_limit, self.right_limit)
+            heart_pos_y = random.uniform(self.bottom_limit, self.top_limit)
+            self.heart = Heart(heart_pos_x, heart_pos_y)
+            self.add(self.heart)
+            BasicLayer.__exists_heart = True
+        
+

@@ -52,12 +52,10 @@ class Snake(BasicCharacter):
         elif self.direction == key.RIGHT:
             mov_x += offset * self.speed.x * 1
 
-        elif self.direction == key.UP:            
-            # mov_y += self.height
+        elif self.direction == key.UP:
             mov_y += offset * self.speed.y * 1
 
         elif self.direction == key.DOWN:
-            # mov_y -= self.height
             mov_y += offset * self.speed.y * -1
 
         self.position = Vector2(mov_x, mov_y)
