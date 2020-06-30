@@ -11,7 +11,8 @@ if __name__ == "__main__":
     """Ejecución del famoso juego de la vibora representado por Quetzalcoatl.
     """
     Resources.load_sprites_path()
-    director.init(caption = 'Quetzalcoatl', width = 800, height = 600)
+    # director.init(caption = 'Quetzalcoatl', width = 800, height = 600)
+    director.init(caption = 'Quetzalcoatl', width = 640, height = 480)
     layer = BasicLayer()
     scene = Scene(layer)
     director.run(scene)

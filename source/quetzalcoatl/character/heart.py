@@ -1,5 +1,3 @@
-from cocos.euclid import Vector2
-
 from quetzalcoatl.resources import Resources
 from quetzalcoatl.character.basic_character import BasicCharacter
 
@@ -15,4 +13,4 @@ class Heart(BasicCharacter):
             y_pos (float): posición inicial del objeto sobre el escenario en el eje vertical.
         """
         super().__init__(image = Resources.get_heart_animation())
-        self.position = Vector2(x_pos, y_pos)
+        self.position = x_pos, y_pos

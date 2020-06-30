@@ -1,6 +1,5 @@
 from cocos.director import director
 from cocos.layer import Layer
-from cocos.euclid import Vector2
 
 import random
 from pyglet.window import key
@@ -20,24 +19,33 @@ class BasicLayer(Layer):
     def __init__(self):
         super().__init__()        
         self.window_width, self.window_height = director.get_window_size()
+        self.top_limit,   self.bottom_limit = self.window_height, 0
+        self.right_limit, self.left_limit   = self.window_width,  0
 
-        self.top_limit, self.bottom_limit = self.window_height, 0
-        self.left_limit, self.right_limit = 0, self.window_width
-
-        self.snake = Snake(x_pos = self.window_width * 0.50, y_pos = self.window_height * 0.50)
+        self.snake = Snake(x_pos = self.right_limit * 0.50, y_pos = self.top_limit * 0.50)
         self.add(self.snake)
+        for segment in self.snake.body:
+            self.add(segment)
 
-        self.schedule(self.update)
+        self.schedule_interval(self.update, 0.2)
 
 
     def on_key_press(self, symbol, _):
-        self.snake.direction = symbol
+        """Acciones que se han de realizar al pulsar una tecla.
+        """
+        self.snake.change_direction(symbol)
 
 
     def update(self, delta_t):
         """Actualiza el estado de todos los elementos de la capa.
         """
         self.__move_snake(delta_t)
+        if not BasicLayer.__exists_heart:
+            heart_pos_x = random.uniform(self.left_limit, self.right_limit)
+            heart_pos_y = random.uniform(self.bottom_limit, self.top_limit)
+            self.heart = Heart(heart_pos_x, heart_pos_y)
+            self.add(self.heart)
+            BasicLayer.__exists_heart = True
 
 
     def __move_snake(self, offset:float):
@@ -59,13 +67,5 @@ class BasicLayer(Layer):
         elif self.snake.direction == key.DOWN and self.snake.position[1] + self.snake.height / 2 <= self.bottom_limit:
             self.snake.y_position(self.top_limit)
         else:
-            self.snake.move(offset)
-
-        if not BasicLayer.__exists_heart:
-            heart_pos_x = random.uniform(self.left_limit, self.right_limit)
-            heart_pos_y = random.uniform(self.bottom_limit, self.top_limit)
-            self.heart = Heart(heart_pos_x, heart_pos_y)
-            self.add(self.heart)
-            BasicLayer.__exists_heart = True
-        
+            self.snake.move()
 
