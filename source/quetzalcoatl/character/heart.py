@@ -1,6 +1,9 @@
 from quetzalcoatl.resources import Resources
 from quetzalcoatl.character.basic_character import BasicCharacter
 
+import cocos.collision_model as cm
+from cocos.euclid import Vector2
+
 
 class Heart(BasicCharacter):
     """[summary]
@@ -14,3 +17,4 @@ class Heart(BasicCharacter):
         """
         super().__init__(image = Resources.get_heart_animation())
         self.position = x_pos, y_pos
+        self.cshape = cm.CircleShape(Vector2(x_pos, y_pos), self.width / 2)

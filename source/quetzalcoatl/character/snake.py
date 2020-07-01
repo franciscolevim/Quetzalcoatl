@@ -1,4 +1,5 @@
 from cocos.euclid import Vector2
+import cocos.collision_model as cm
 from pyglet.window import key
 
 from quetzalcoatl.resources import Resources
@@ -21,30 +22,7 @@ class Segment(BasicCharacter):
         super().__init__(image = Resources.get_segment_image())
         self.position = position
         self.direction = direction
-
-
-#     def move(self, offset:float):
-#         """El movimiento de Quetzalcoatl debe parte de la dirección que el jugador le da, esta dirección partirá de la 
-#         cabeza y cada segmento delcuerpo deberá seguir este movimiento.
-
-#         Args:
-#             offset (float): diferencia de distancia que se da de un lado a otro.
-#         """
-#         mov_x = self.position[0] 
-#         mov_y = self.position[1]
-
-#         if self.direction == key.LEFT:
-#             mov_x += offset * self.speed.x * -1
-#         elif self.direction == key.RIGHT:
-#             mov_x += offset * self.speed.x * 1
-
-#         elif self.direction == key.UP:
-#             mov_y += offset * self.speed.y * 1
-
-#         elif self.direction == key.DOWN:
-#             mov_y += offset * self.speed.y * -1
-
-#         self.position = Vector2(mov_x, mov_y)
+        self.cshape = cm.CircleShape(position, self.width * 0.5)
 
 
 class Snake(BasicCharacter):
@@ -59,22 +37,33 @@ class Snake(BasicCharacter):
         """
         super().__init__(image = Resources.get_head_image())
         self.position = x_pos, y_pos
+        self.cshape = cm.AARectShape(Vector2(x_pos, y_pos), self.width * 0.5, self.height * 0.5)
 
         self.body = []
         for _ in range(3):
-            self.grow()
+            position = self.position[0] + 0, self.position[1] - (self.height * (len(self.body) + 1))
+            segment = Segment(position, 0)
+            self.body.append(segment)
 
 
     def grow(self):
         """[summary]
         """
-        pos_x = self.position[0] + 0
-        pos_y = self.position[1] - (self.height * (len(self.body) + 1))
-        position = pos_x, pos_y
-        # direction = self.body[-1].direction if len(self.body) > 0 else self.direction
-        # segment = Segment(position, self.direction)
-        segment = Segment(position, 0)
-        self.body.append(segment)
+        mov_x, mov_y = self.position[0], self.position[1]
+        self.body.insert(0, Segment(position = (mov_x, mov_y), direction = self.direction))
+        self.cshape.center= Vector2(mov_x, mov_y)
+
+        if self.direction == key.LEFT:
+            mov_x -= self.width
+        elif self.direction == key.RIGHT:
+            mov_x += self.width
+        elif self.direction == key.UP:
+            mov_y += self.height
+        elif self.direction == key.DOWN:
+            mov_y -= self.height
+
+        self.position = mov_x, mov_y
+        self.cshape.center= Vector2(mov_x, mov_y)
 
 
     def move(self):
@@ -92,9 +81,11 @@ class Snake(BasicCharacter):
             for idx in indices[:0:-1]:
                 self.body[idx].position = self.body[idx - 1].position
                 self.body[idx].direction = self.body[idx - 1].direction
+                self.cshape.center= Vector2(self.body[idx].position[0], self.body[idx].position[0])
 
             self.body[0].position = self.position
             self.body[0].direction = self.direction
+            self.cshape.center= Vector2(mov_x, mov_y)
 
             if self.direction == key.LEFT:
                 mov_x -= self.width
@@ -104,15 +95,19 @@ class Snake(BasicCharacter):
                 mov_y += self.height
             elif self.direction == key.DOWN:
                 mov_y -= self.height
+                
             self.position = mov_x, mov_y
+            self.cshape.center= Vector2(mov_x, mov_y)
 
 
     def y_position(self, position:float):
         self.position = self.position[0], position
+        self.cshape.center= Vector2(self.position[0], position)
 
 
     def x_position(self, position:float):
         self.position = position, self.position[1]
+        self.cshape.center= Vector2(position, self.position[1])
 
 
     def change_direction(self, direction):
