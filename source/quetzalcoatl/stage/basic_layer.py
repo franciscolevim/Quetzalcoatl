@@ -6,7 +6,7 @@ import random
 from pyglet.window import key
 from collections import defaultdict
 
-from quetzalcoatl.character.snake import Snake
+from quetzalcoatl.character.snake import Snake, Segment
 from quetzalcoatl.character.heart import Heart
 
 
@@ -28,8 +28,20 @@ class BasicLayer(Layer):
         for segment in self.snake.body:
             self.add(segment)
 
-        self.heart_cm = cm.CollisionManagerBruteForce()
+        self.heart_cm = self.__make_collision_manager(self.snake.width * 1.25)
+        self.snake_cm = self.__make_collision_manager(self.snake.width * 1.25)
         self.schedule_interval(self.update, 0.2)
+
+
+    def __make_collision_manager(self, cell_size):
+        """Crea un manejador de colisiones.
+
+        Args:
+            cell_size: Tamaño de las celdas en las que se divide el escenario para capturar una colisión.
+        """
+        return cm.CollisionManagerGrid( xmin = self.left_limit,   xmax = self.right_limit,
+                                        ymin = self.bottom_limit, ymax = self.top_limit,
+                                        cell_width = cell_size, cell_height = cell_size )
 
 
     def on_key_press(self, symbol, _):
@@ -40,9 +52,38 @@ class BasicLayer(Layer):
 
     def update(self, delta_t):
         """Actualiza el estado de todos los elementos de la capa.
+        """        
+        if not self.__snake_collision():
+            self.__move_snake(delta_t)
+            self.__put_heart()
+        else:
+            self.__reset_game()
+
+
+    def __snake_collision(self):
+        """Detecta si la cabeza de Quetzalcoatl ha colisionado con su cuerpo.
         """
-        self.__move_snake(delta_t)
-        self.__put_heart()
+        self.snake_cm.clear()
+        for segment in self.snake.body:
+            self.snake_cm.add(segment)
+        for segment in self.snake_cm.iter_colliding(self.snake):
+            return True
+        return False
+
+
+    def __reset_game(self):
+        """Reinicia el juego.
+        """
+        self.remove(self.heart)
+        BasicLayer.__exists_heart = False
+        self.snake_cm.clear()
+        for segment in self.snake.body:
+            self.remove(segment)
+        self.remove(self.snake)
+        self.snake = Snake(x_pos = self.right_limit * 0.50, y_pos = self.top_limit * 0.50)
+        self.add(self.snake)
+        for segment in self.snake.body:
+            self.add(segment)
 
 
     def __put_heart(self):
@@ -61,8 +102,6 @@ class BasicLayer(Layer):
             self.snake.grow()
             self.add(self.snake.body[0])
             BasicLayer.__exists_heart = False
-
-            
 
 
     def __move_snake(self, offset:float):

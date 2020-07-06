@@ -51,7 +51,6 @@ class Snake(BasicCharacter):
         """
         mov_x, mov_y = self.position[0], self.position[1]
         self.body.insert(0, Segment(position = (mov_x, mov_y), direction = self.direction))
-        self.cshape.center= Vector2(mov_x, mov_y)
 
         if self.direction == key.LEFT:
             mov_x -= self.width
@@ -81,11 +80,11 @@ class Snake(BasicCharacter):
             for idx in indices[:0:-1]:
                 self.body[idx].position = self.body[idx - 1].position
                 self.body[idx].direction = self.body[idx - 1].direction
-                self.cshape.center= Vector2(self.body[idx].position[0], self.body[idx].position[0])
+                self.body[idx].cshape.center = Vector2(self.body[idx].position[0], self.body[idx].position[1])
 
             self.body[0].position = self.position
             self.body[0].direction = self.direction
-            self.cshape.center= Vector2(mov_x, mov_y)
+            self.body[0].cshape.center= Vector2(mov_x, mov_y)
 
             if self.direction == key.LEFT:
                 mov_x -= self.width
